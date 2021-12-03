@@ -27,19 +27,18 @@ public class TradingPostBlockEntity extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    protected void saveAdditional(CompoundTag compoundTag) {
+        super.saveAdditional(compoundTag);
         if (this.hasCustomName()) {
-            compound.putString("CustomName", Component.Serializer.toJson(this.name));
+            compoundTag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
-        return compound;
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        if (compound.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(compound.getString("CustomName"));
+    public void load(CompoundTag compoundTag) {
+        super.load(compoundTag);
+        if (compoundTag.contains("CustomName", 8)) {
+            this.name = Component.Serializer.fromJson(compoundTag.getString("CustomName"));
         }
     }
 

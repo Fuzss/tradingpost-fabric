@@ -26,20 +26,12 @@ public class TradingPostMenu extends MerchantMenu {
     private int ticks;
     private boolean lockOffers;
 
-    public TradingPostMenu(int containerId, Inventory playerInventory) {
-        super(containerId, playerInventory);
-        this.access = ContainerLevelAccess.NULL;
-        this.traders = new MerchantCollection(this.access, playerInventory.player.level);
-        ((MerchantMenuAccessor) this).setTrader(this.traders);
-        this.tradeContainer = new TradingPostContainer(this.traders);
-        ((MerchantMenuAccessor) this).setTradeContainer(this.tradeContainer);
-        this.replaceSlot(0, new Slot(this.tradeContainer, 0, 136, 37));
-        this.replaceSlot(1, new Slot(this.tradeContainer, 1, 162, 37));
-        this.replaceSlot(2, new MerchantResultSlot(playerInventory.player, this.traders, this.tradeContainer, 2, 220, 37));
+    public TradingPostMenu(int containerId, Inventory inventory) {
+        this(containerId, inventory, new MerchantCollection(), ContainerLevelAccess.NULL);
     }
 
-    public TradingPostMenu(int containerId, Inventory playerInventory, MerchantCollection merchantCollection, ContainerLevelAccess worldPosCallable) {
-        super(containerId, playerInventory, merchantCollection);
+    public TradingPostMenu(int containerId, Inventory inventory, MerchantCollection merchantCollection, ContainerLevelAccess worldPosCallable) {
+        super(containerId, inventory, merchantCollection);
         this.access = worldPosCallable;
         this.traders = merchantCollection;
         ((MerchantMenuAccessor) this).setTrader(this.traders);
@@ -47,7 +39,7 @@ public class TradingPostMenu extends MerchantMenu {
         ((MerchantMenuAccessor) this).setTradeContainer(this.tradeContainer);
         this.replaceSlot(0, new Slot(this.tradeContainer, 0, 136, 37));
         this.replaceSlot(1, new Slot(this.tradeContainer, 1, 162, 37));
-        this.replaceSlot(2, new MerchantResultSlot(playerInventory.player, this.traders, this.tradeContainer, 2, 220, 37));
+        this.replaceSlot(2, new MerchantResultSlot(inventory.player, this.traders, this.tradeContainer, 2, 220, 37));
     }
 
     private void replaceSlot(int index, Slot slot) {
@@ -117,10 +109,10 @@ public class TradingPostMenu extends MerchantMenu {
     }
 
     private void playTradeSound() {
-        if (!this.traders.getLevel().isClientSide) {
+        if (!this.traders.isClientSide()) {
             Merchant merchant = this.traders.getCurrentMerchant();
             if (merchant instanceof Entity entity) {
-                this.traders.getLevel().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.traders.getNotifyTradeSound(), SoundSource.NEUTRAL, 1.0F, 1.0F, false);
+                entity.getLevel().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.traders.getNotifyTradeSound(), SoundSource.NEUTRAL, 1.0F, 1.0F, false);
             }
         }
     }
